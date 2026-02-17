@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Set;
 import java.util.Vector;
 
 public class InventorySystemMain {
@@ -63,19 +64,42 @@ public class InventorySystemMain {
 
             switch (choice) {
                 case 1: // Add Product
-                    System.out.print("Product ID: ");
-                    String id = scanner.nextLine();
-                    System.out.print("Name: ");
-                    String name = scanner.nextLine();
-                    System.out.print("Price: ");
-                    double price = scanner.nextDouble();
-                    System.out.print("Quantity: ");
-                    int qty = scanner.nextInt();
-                    scanner.nextLine();
-
-                    inventory.addProduct(new Product(id, name, "General", price, qty, "DefaultSupplier"));
-                    System.out.println("Product Added.");
+                System.out.print("Product ID: ");
+                String id = scanner.nextLine();
+    
+                // Check for duplicate ID
+                if (inventory.findProduct(id) != null) {
+                    System.out.println("Error: Product with ID " + id + " already exists.");
                     break;
+                }
+
+                System.out.print("Name: ");
+                String name = scanner.nextLine();
+    
+                System.out.print("Category: ");
+                String category = scanner.nextLine();
+                // Validate category
+                Set<String> validCategories = Set.of("Electronics", "Clothing", "Food", "General");
+                if (!validCategories.contains(category)) {
+                System.out.println("Warning: Invalid category, defaulting to 'General'");
+                    category = "General";
+                }
+
+                System.out.print("Price: ");
+                double price = scanner.nextDouble();
+                System.out.print("Quantity: ");
+                int qty = scanner.nextInt();
+                scanner.nextLine(); // clear buffer
+
+                // Check for negative values
+                if (price < 0 || qty < 0) {
+                System.out.println("Error: Price and quantity cannot be negative.");
+                break;
+            }
+
+                inventory.addProduct(new Product(id, name, category, price, qty, "DefaultSupplier"));
+                System.out.println("Product Added.");
+                break;
 
                 case 2: // Remove Product
                     System.out.print("Enter Product ID to remove: ");
@@ -101,37 +125,64 @@ public class InventorySystemMain {
                 case 5: // Create Order
                     System.out.print("Order ID: ");
                     String orderId = scanner.nextLine();
+
                     System.out.print("Customer Name: ");
                     String customer = scanner.nextLine();
+
                     System.out.print("Order Date: ");
                     String date = scanner.nextLine();
 
                     Order order = new Order(orderId, customer, date, "Pending");
                     boolean addingItems = true;
+
                     while (addingItems) {
-                        System.out.print("Enter Product ID: ");
-                        String pId = scanner.nextLine();
-                        Product product = inventory.findProduct(pId);
-                        if (product == null) {
-                            System.out.println("Product not found.");
-                            continue;
-                        }
 
-                        System.out.print("Quantity: ");
-                        int quantity = scanner.nextInt();
-                        scanner.nextLine();
+                    System.out.print("Enter Product ID: ");
+                    String pId = scanner.nextLine();
 
-                        order.addItem(new OrderItem(product.getProductId(), product.getName(), quantity, product.getPrice()));
 
-                        System.out.print("Add another item? (y/n): ");
-                        String more = scanner.nextLine();
-                        if (!more.equalsIgnoreCase("y")) {
-                            addingItems = false;
-                        }
+                    Product product = inventory.findProduct(pId);
+
+                    // Product NOT found → Return to menu
+                    if (product == null) {
+                    System.out.println("Error: Product not found.");
+                    addingItems = false; // exit loop
+                    break;
                     }
+
+                    System.out.print("Quantity: ");
+                    int quantity = scanner.nextInt();
+                    scanner.nextLine(); // clear buffer
+
+                    if (quantity <= 0) {
+                        System.out.println("Error: Quantity must be positive.");
+                        continue;
+                    }
+
+                    order.addItem(new OrderItem(
+                        product.getProductId(),
+                        product.getName(),
+                        quantity,
+                        product.getPrice()
+                    ));
+
+                    System.out.print("Add another item? (y/n): ");
+                    String more = scanner.nextLine();
+
+                    if (!more.equalsIgnoreCase("y")) {
+                        addingItems = false;
+                    }
+                }
+
+                // Prevent empty orders
+                if (order.getItems().isEmpty()) {
+                    System.out.println("Order cancelled. No items were added.");
+                } else {
                     orderManager.addOrder(order);
                     System.out.println("Order Created.");
-                    break;
+                }
+
+                break;   
 
                 case 6: // View Orders
                     orderManager.printAllOrders();
