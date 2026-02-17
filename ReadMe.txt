@@ -1,48 +1,140 @@
-# README.txt
+Vector-Based Inventory Management System
 
-## Homework 1: Vector-Based Inventory Management System
+## Overview
 
-### Brief Description of Each Class
-
-1. **Product**
-   Represents a store product with `productId`, `name`, `category`, `price`, `quantityInStock`, and `supplier`. Provides constructors, getters/setters, `toString()`, `equals()`, and `hashCode()`.
-
-2. **ProductInventory**
-   Manages a `Vector<Product>` inventory. Supports adding/removing products, finding products, filtering by category or low stock, updating stock, calculating total inventory value, printing inventory, and capacity management. Demonstrates Enumeration usage.
-
-3. **OrderItem**
-   Represents an item in an order with `productId`, `productName`, `quantity`, `unitPrice`, and `subtotal`. Methods include calculating subtotal and standard getters/setters.
-
-4. **Order**
-   Represents a customer order with `orderId`, `customerName`, `orderDate`, `Vector<OrderItem> items`, and `orderStatus`. Methods allow adding/removing/finding items, calculating total, updating status, and printing order details.
-
-5. **OrderManager**
-   Manages `Vector<Order>` orders. Supports adding orders, searching by orderId, filtering by customer or status, canceling orders, calculating total revenue, and printing all orders.
-
-6. **VectorUtils**
-   Provides generic utility methods for `Vector`s:
-
-   * Swap two elements
-   * Find maximum element
-   * Count occurrences
-   * Filter elements based on a condition
-   * Bounded methods for Numbers: sum and average
-
-7. **GenericContainer<T>**
-   Generic wrapper for `Vector<T>` with type-safe operations: add, remove, get, size, clear, contains, addAll, and returning all items.
-
-8. **VectorComparisonDemo**
-   Demonstrates performance differences between `Vector<Product>` and `ArrayList<Product>` for adding, removing, and accessing elements. Measures time and memory usage.
-
-9. **InventorySystemMain**
-   Main application integrating all components. Demonstrates product management, order processing, Vector capacity management, generic utilities, and generates reports. Optional menu system for interactive operations.
-
-10. **ThreadSafetyDemo (Bonus)**
-    Demonstrates thread-safety characteristics of `Vector` vs `ArrayList` with concurrent add, remove, and read operations.
+This project implements a **Vector-based inventory management system** in Java. It demonstrates the use of `Vector`, generics, enumeration, thread safety, and performance comparison with `ArrayList`. The system supports product management, order processing, and utility operations.
 
 ---
 
-### How to Compile and Run
+## Class Descriptions
+
+### 1. **Product**
+
+Represents a store product with the following attributes:
+
+* `productId`
+* `name`
+* `category`
+* `price`
+* `quantityInStock`
+* `supplier`
+
+Provides constructors, getters/setters, `toString()`, `equals()`, and `hashCode()`.
+
+---
+
+### 2. **ProductInventory**
+
+Manages a `Vector<Product>` and supports:
+
+* Adding/removing products (duplicate check by `productId`)
+* Finding products
+* Filtering by category or low stock
+* Updating stock
+* Calculating total inventory value
+* Printing inventory
+* Capacity management (`trimToSize()`, `ensureCapacity()`)
+
+Demonstrates `Enumeration` usage.
+
+---
+
+### 3. **OrderItem**
+
+Represents an item in an order:
+
+* `productId`
+* `productName`
+* `quantity`
+* `unitPrice`
+* `subtotal`
+
+Includes methods to calculate subtotal and standard getters/setters.
+
+---
+
+### 4. **Order**
+
+Represents a customer order with:
+
+* `orderId`
+* `customerName`
+* `orderDate`
+* `Vector<OrderItem> items`
+* `orderStatus`
+
+Supports adding/removing/finding items, calculating total, updating status, and printing order details.
+
+---
+
+### 5. **OrderManager**
+
+Manages a `Vector<Order>` and supports:
+
+* Adding orders
+* Searching by `orderId`
+* Filtering by customer or status
+* Canceling orders
+* Calculating total revenue
+* Printing all orders
+
+---
+
+### 6. **VectorUtils**
+
+Provides generic utility methods for `Vector`s:
+
+* Swap two elements
+* Find maximum element
+* Count occurrences
+* Filter elements by condition
+* Bounded numeric operations: sum and average
+
+---
+
+### 7. **GenericContainer<T>**
+
+Generic wrapper for `Vector<T>` with type-safe operations:
+
+* Add, remove, get, size, clear, contains
+* Add all elements
+* Return all items
+
+---
+
+### 8. **VectorComparisonDemo**
+
+Demonstrates performance differences between `Vector<Product>` and `ArrayList<Product>` for:
+
+* Adding, removing, and accessing elements
+* Measures time and memory usage
+
+---
+
+### 9. **InventorySystemMain**
+
+Main application integrating all components:
+
+* Product management
+* Order processing
+* Vector capacity management
+* Generic utilities
+* Optional interactive menu for operations
+* Generates reports
+
+---
+
+### 10. **ThreadSafetyDemo (Bonus)**
+
+Demonstrates thread-safety characteristics of `Vector` vs `ArrayList` with concurrent:
+
+* Add operations
+* Remove operations
+* Read operations
+
+---
+
+## How to Compile and Run
 
 1. Compile all classes:
 
@@ -56,7 +148,7 @@ javac *.java
 java InventorySystemMain
 ```
 
-3. Optional: Run thread safety demo:
+3. Optional: Run the thread safety demo:
 
 ```bash
 java ThreadSafetyDemo
@@ -64,64 +156,66 @@ java ThreadSafetyDemo
 
 ---
 
-### Assumptions Made
+## Assumptions
 
 * `productId` and `orderId` are unique.
-* `OrderItem` subtotal recalculates when quantity or price changes.
-* Dates are simple strings in `"YYYY-MM-DD"` format.
+* `OrderItem` subtotal recalculates automatically when quantity or price changes.
+* Dates use simple `"YYYY-MM-DD"` strings.
 * Thread-safety demo assumes multiple threads access shared collections.
-* Users input valid product and order data for interactive menu operations.
+* Users input valid data for interactive menu operations.
 
 ---
 
-### Challenges Encountered
+## Challenges Encountered
 
-* Handling duplicate `productId`s.
-* Understanding Vector capacity (`trimToSize()` vs `ensureCapacity()`).
-* Implementing generic methods for multiple types.
-* Comparing performance between `Vector` and `ArrayList`.
-* Handling edge cases like empty Vectors or invalid IDs.
-
----
-
-### What I Learned
-
-* **Vectors and Generics:**
-
-  * Vectors are synchronized (thread-safe) but slower in single-threaded contexts.
-  * Vector capacity management optimizes memory usage.
-  * Generics provide type safety and reduce casting.
-  * Generic utility methods make code reusable and flexible.
-
-* **Practical Insights:**
-
-  * Vector operations are straightforward but require validation for duplicates.
-  * Enumeration is legacy; prefer `Iterator` or enhanced for-loop.
-  * ArrayList is faster in single-threaded programs; Vector is safer for concurrent access.
+* Handling duplicate `productId`s
+* Understanding Vector capacity management
+* Implementing generic methods for multiple types
+* Comparing performance between `Vector` and `ArrayList`
+* Handling edge cases (empty Vectors, invalid IDs)
 
 ---
 
-### Performance and Thread Safety Summary
+## Lessons Learned
 
-**Performance Differences Observed:**
+### Vectors and Generics
 
-* `ArrayList` is faster for adding/accessing elements due to lack of synchronization overhead.
-* `Vector` is slower because all methods are synchronized for thread safety.
+* `Vector` is synchronized (thread-safe) but slower in single-threaded scenarios
+* Capacity management optimizes memory usage
+* Generics provide type safety and reduce casting
+* Generic utilities improve code reusability
 
-**When to Choose Vector:**
+### Practical Insights
 
-* Use when multiple threads may access the collection concurrently.
-* Useful for legacy systems using Vector.
+* Vector operations require validation for duplicates
+* `Enumeration` is legacy; prefer `Iterator` or enhanced for-loops
+* `ArrayList` is faster in single-threaded programs; `Vector` is safer for concurrent access
 
-**When to Choose ArrayList:**
+---
 
-* Best for modern, single-threaded programs.
-* Thread safety can be handled externally if needed.
+## Performance and Thread Safety Summary
 
-**Thread Safety Comparison (Vector vs ArrayList):**
+**Performance Differences:**
 
-* **Vector:** Successfully handled concurrent operations; slower due to synchronization.
-* **ArrayList:** May produce runtime errors under concurrent access; faster in single-threaded scenarios.
-* **Conclusion:** Vector is thread-safe but slower; ArrayList is faster but unsafe for concurrent use without external synchronization.
+* `ArrayList` is faster due to no synchronization overhead
+* `Vector` is slower but thread-safe
 
+**When to Use Vector:**
+
+* Multiple threads may access the collection concurrently
+* Legacy systems using `Vector`
+
+**When to Use ArrayList:**
+
+* Modern, single-threaded programs
+* External synchronization can be applied if needed
+
+**Thread Safety Comparison:**
+
+| Collection | Thread Safety | Performance | Notes                      |
+| ---------- | ------------- | ----------- | -------------------------- |
+| Vector     | Yes           | Slower      | Safe for concurrent access |
+| ArrayList  | No            | Faster      | May fail under concurrency |
+
+**Conclusion:** `Vector` is thread-safe but slower; `ArrayList` is faster but requires external synchronization for multi-threaded use.
 
